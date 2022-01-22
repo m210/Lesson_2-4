@@ -6,36 +6,45 @@ import org.springframework.stereotype.Service;
 public class EmployeeService {
     private final Employee[] list = new Employee[5];
 
-    public boolean addEmployee(String first, String last) {
+    public Employee addEmployee(String first, String last) {
         int index = findEmployeeIndex(first, last);
         if(index != -1) {
-            return false;
+            throw new EmployeeExistException("Сотрудник " + first + " " + last + " уже есть в базе данных");
         }
 
+        Employee addedEmployee = null;
         for(int i = 0; i < list.length; i++) {
             if(list[i] == null) {
-                list[i] = new Employee(first, last);
-                return true;
+                addedEmployee = new Employee(first, last);
+                list[i] = addedEmployee;
+                break;
             }
         }
-        throw new EmployeeStoreException("Массив сотрудников переполнен");
+
+        if(addedEmployee == null) {
+            throw new EmployeeStoreException("Массив сотрудников переполнен");
+        }
+
+        return addedEmployee;
     }
 
-    public boolean removeEmployee(String first, String last) {
+    public Employee removeEmployee(String first, String last) {
         int index = findEmployeeIndex(first, last);
-        if(index != -1) {
-            list[index] = null;
-            return true;
+        if(index == -1) {
+            throw new EmployeeNotFoundException("Удаляемый сотрудник " + first + " " + last + " не найден");
         }
-        throw new EmployeeNotFoundException("Удаляемый сотрудник " + first + " " + last + " не найден");
+
+        Employee foundEmployee = list[index];
+        list[index] = null;
+        return foundEmployee;
     }
 
     public Employee findEmployee(String first, String last) {
         int index = findEmployeeIndex(first, last);
-        if(index != -1) {
-            return list[index];
+        if(index == -1) {
+            throw new EmployeeNotFoundException("Сотрудник " + first + " " + last + " не найден");
         }
-        throw new EmployeeNotFoundException("Сотрудник " + first + " " + last + " не найден");
+        return list[index];
     }
 
     private int findEmployeeIndex(String first, String last) {

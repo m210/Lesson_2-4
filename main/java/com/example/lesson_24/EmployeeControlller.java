@@ -14,17 +14,13 @@ public class EmployeeControlller {
     }
 
     @RequestMapping("/add")
-    public String add(@RequestParam String firstName, @RequestParam String lastName) {
-        if(service.addEmployee(firstName, lastName))
-            return "Сотрудник " + firstName + " " + lastName + " успешно создан.";
-        return "Сотрудник " + firstName + " " + lastName + " уже есть в базе данных";
+    public Employee add(@RequestParam String firstName, @RequestParam String lastName) {
+        return service.addEmployee(firstName, lastName);
     }
 
     @RequestMapping("/remove")
-    public String remove(@RequestParam String firstName, @RequestParam String lastName) {
-        if(service.removeEmployee(firstName, lastName))
-            return "Сотрудник " + firstName + " " + lastName + " успешно удален.";
-        return "Сотрудник " + firstName + " " + lastName + " не найден";
+    public Employee remove(@RequestParam String firstName, @RequestParam String lastName) {
+        return service.removeEmployee(firstName, lastName);
     }
 
     @RequestMapping("/find")
