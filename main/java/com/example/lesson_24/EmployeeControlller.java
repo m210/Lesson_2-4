@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/employee")
 public class EmployeeControlller {
@@ -26,5 +28,10 @@ public class EmployeeControlller {
     @RequestMapping("/find")
     public Employee find(@RequestParam String firstName, @RequestParam String lastName) {
         return service.findEmployee(firstName, lastName);
+    }
+
+    @RequestMapping("/showall")
+    public List<Employee> getEmployees() {
+        return service.getEmployees();
     }
 }

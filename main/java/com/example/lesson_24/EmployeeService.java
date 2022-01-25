@@ -2,9 +2,16 @@ package com.example.lesson_24;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class EmployeeService {
-    private final Employee[] list = new Employee[5];
+    private final List<Employee> list = new ArrayList<>();
+
+    public List<Employee> getEmployees() {
+        return list;
+    }
 
     public Employee addEmployee(String first, String last) {
         int index = findEmployeeIndex(first, last);
@@ -12,19 +19,8 @@ public class EmployeeService {
             throw new EmployeeExistException("Сотрудник " + first + " " + last + " уже есть в базе данных");
         }
 
-        Employee addedEmployee = null;
-        for(int i = 0; i < list.length; i++) {
-            if(list[i] == null) {
-                addedEmployee = new Employee(first, last);
-                list[i] = addedEmployee;
-                break;
-            }
-        }
-
-        if(addedEmployee == null) {
-            throw new EmployeeStoreException("Массив сотрудников переполнен");
-        }
-
+        Employee addedEmployee = new Employee(first, last);
+        list.add(addedEmployee);
         return addedEmployee;
     }
 
@@ -33,10 +29,7 @@ public class EmployeeService {
         if(index == -1) {
             throw new EmployeeNotFoundException("Удаляемый сотрудник " + first + " " + last + " не найден");
         }
-
-        Employee foundEmployee = list[index];
-        list[index] = null;
-        return foundEmployee;
+        return list.remove(index);
     }
 
     public Employee findEmployee(String first, String last) {
@@ -44,17 +37,10 @@ public class EmployeeService {
         if(index == -1) {
             throw new EmployeeNotFoundException("Сотрудник " + first + " " + last + " не найден");
         }
-        return list[index];
+        return list.get(index);
     }
 
     private int findEmployeeIndex(String first, String last) {
-        for (int i = 0; i < list.length; i++) {
-            Employee dude = list[i];
-            if(dude != null && dude.getFirstName().equalsIgnoreCase(first)
-                    && dude.getLastName().equalsIgnoreCase(last)) {
-                return i;
-            }
-        }
-        return -1;
+        return list.indexOf(new Employee(first, last));
     }
 }
