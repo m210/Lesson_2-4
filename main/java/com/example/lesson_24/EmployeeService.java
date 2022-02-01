@@ -12,26 +12,30 @@ public class EmployeeService {
         return map.values();
     }
 
+    private String generateKey(String first, String last) {
+        return first.toLowerCase() + " " + last.toLowerCase();
+    }
+
     public Employee addEmployee(String first, String last) {
-        if(map.containsKey(first + last)) {
+        if(map.containsKey(generateKey(first, last))) {
             throw new EmployeeExistException("Сотрудник " + first + " " + last + " уже есть в базе данных");
         }
         Employee addedEmployee = new Employee(first, last);
-        map.put(first + last, addedEmployee);
+        map.put(generateKey(first, last), addedEmployee);
         return addedEmployee;
     }
 
     public Employee removeEmployee(String first, String last) {
-        if(!map.containsKey(first + last)) {
+        if(!map.containsKey(generateKey(first, last))) {
             throw new EmployeeNotFoundException("Удаляемый сотрудник " + first + " " + last + " не найден");
         }
-        return map.remove(first + last);
+        return map.remove(generateKey(first, last));
     }
 
     public Employee findEmployee(String first, String last) {
-        if(!map.containsKey(first + last)) {
+        if(!map.containsKey(generateKey(first, last))) {
             throw new EmployeeNotFoundException("Сотрудник " + first + " " + last + " не найден");
         }
-        return map.get(first + last);
+        return map.get(generateKey(first, last));
     }
 }
