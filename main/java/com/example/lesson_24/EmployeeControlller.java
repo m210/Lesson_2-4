@@ -13,12 +13,6 @@ public class EmployeeControlller {
 
     public EmployeeControlller(EmployeeService service) {
         this.service = service;
-
-        service.addEmployee("Bill", "Gates");
-        service.addEmployee("Steve", "Jobs");
-        service.addEmployee("John", "Romero");
-        service.addEmployee("John", "Carmack");
-        service.addEmployee("Gabe", "Newell");
     }
 
     @RequestMapping("/add")

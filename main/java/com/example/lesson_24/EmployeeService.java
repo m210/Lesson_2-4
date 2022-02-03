@@ -8,6 +8,14 @@ import java.util.*;
 public class EmployeeService {
     private final Map<String, Employee> map = new HashMap<>();
 
+    public EmployeeService() {
+        addEmployee("Bill", "Gates");
+        addEmployee("Steve", "Jobs");
+        addEmployee("John", "Romero");
+        addEmployee("John", "Carmack");
+        addEmployee("Gabe", "Newell");
+    }
+
     public Collection<Employee> getEmployees() {
         return map.values();
     }
