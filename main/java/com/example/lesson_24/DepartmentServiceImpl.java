@@ -1,14 +1,24 @@
 package com.example.lesson_24;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
 
-    public void setSalaryAndDepartment(EmployeeService employeeService) {
+    private final EmployeeService employeeService;
+
+    @Autowired
+    public DepartmentServiceImpl(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
+
+    @PostConstruct
+    private void postConstruct() {
         Collection<Employee> list = employeeService.getEmployees();
         Random rand = new Random();
 
@@ -19,29 +29,34 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public Employee getMinimumSalaryInDep(EmployeeService employeeService, int department) {
-        Collection<Employee> list = employeeService.getEmployees();
-        Optional<Employee> empl = list.stream().filter(t -> t.getDepartment() == department).min(Comparator.comparingInt(Employee::getSalary));
+    public Employee getMinimumSalaryInDep(int department) {
+        Optional<Employee> empl = employeeService.getEmployees().stream().filter(t -> t.getDepartment() == department)
+                .min(Comparator.comparingInt(Employee::getSalary));
         return empl.orElseThrow(() -> new EmployeeNotFoundException("Подразделение с departmentId = " + department + " не найден!"));
     }
 
     @Override
-    public Employee getMaximumSalaryInDep(EmployeeService employeeService,int department) {
-        Collection<Employee> list = employeeService.getEmployees();
-        Optional<Employee> empl = list.stream().filter(t -> t.getDepartment() == department).max(Comparator.comparingInt(Employee::getSalary));
+    public Employee getMaximumSalaryInDep(int department) {
+        Optional<Employee> empl = employeeService.getEmployees().stream().filter(t -> t.getDepartment() == department)
+                .max(Comparator.comparingInt(Employee::getSalary));
         return empl.orElseThrow(() -> new EmployeeNotFoundException("Подразделение с departmentId = " + department + " не найден!"));
     }
 
     @Override
-    public List<Employee> printEmployeesInDepartment(EmployeeService employeeService, int department) {
-        Collection<Employee> list = employeeService.getEmployees();
-        return list.stream().filter(t -> t.getDepartment() == department).collect(Collectors.toList());
+    public List<Employee> getEmployeesInDepartment(int department) {
+        return employeeService.getEmployees().stream().filter(t -> t.getDepartment() == department).collect(Collectors.toList());
     }
 
     @Override
-    public  Map<Integer, List<Employee>> printEmployees(EmployeeService employeeService) {
-        Collection<Employee> list = employeeService.getEmployees();
-        return list.stream().collect(Collectors.groupingBy(Employee::getDepartment));
+    public  Map<Integer, List<Employee>> getEmployees() {
+        return employeeService.getEmployees().stream().collect(Collectors.groupingBy(Employee::getDepartment));
+    }
+
+    @Override
+    public String printEmployeesInDepartment(Integer departmentId) {
+        if(departmentId == null)
+            return getEmployees().toString();
+        return getEmployeesInDepartment(departmentId).toString();
     }
 
 }

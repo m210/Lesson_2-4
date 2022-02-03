@@ -5,14 +5,14 @@ import java.util.Map;
 
 public interface DepartmentService {
 
-    void setSalaryAndDepartment(EmployeeService employeeService);
+    Employee getMinimumSalaryInDep(int department);
 
-    Employee getMinimumSalaryInDep(EmployeeService employeeService, int department);
+    Employee getMaximumSalaryInDep(int department);
 
-    Employee getMaximumSalaryInDep(EmployeeService employeeService, int department);
+    List<Employee> getEmployeesInDepartment(int department);
 
-    List<Employee> printEmployeesInDepartment(EmployeeService employeeService, int department);
+    Map<Integer, List<Employee>> getEmployees();
 
-    Map<Integer, List<Employee>> printEmployees(EmployeeService employeeService);
+    String printEmployeesInDepartment(Integer departmentId);
 
 }

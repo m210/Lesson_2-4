@@ -9,33 +9,23 @@ import javax.annotation.PostConstruct;
 public class DepartmentControlller {
 
     private final DepartmentServiceImpl departmentService;
-    private final EmployeeService employeeService;
 
     public DepartmentControlller(DepartmentServiceImpl service, EmployeeService employeeService) {
         this.departmentService = service;
-        this.employeeService = employeeService;
-    }
-
-    @PostConstruct
-    private void postConstruct() {
-        departmentService.setSalaryAndDepartment(employeeService);
     }
 
     @GetMapping("min-salary")
     public String getMinimumSalaryInDep(@RequestParam int departmentId) {
-        return "Min salary in department " + departmentId + " has " + departmentService.getMinimumSalaryInDep(employeeService, departmentId);
+        return "Min salary in department " + departmentId + " has " + departmentService.getMinimumSalaryInDep(departmentId);
     }
 
     @GetMapping("max-salary")
     public String getMaximumSalaryInDep(@RequestParam int departmentId) {
-        return "Max salary in department " + departmentId + " has " + departmentService.getMaximumSalaryInDep(employeeService, departmentId);
+        return "Max salary in department " + departmentId + " has " + departmentService.getMaximumSalaryInDep(departmentId);
     }
 
     @GetMapping("all")
     public String printEmployeesInDepartment(@RequestParam(required = false) Integer departmentId) {
-        if(departmentId == null)
-            return departmentService.printEmployees(employeeService).toString();
-
-        return departmentService.printEmployeesInDepartment(employeeService, departmentId).toString();
+        return departmentService.printEmployeesInDepartment(departmentId);
     }
 }
