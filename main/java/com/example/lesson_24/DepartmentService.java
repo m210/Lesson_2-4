@@ -1,19 +1,18 @@
 package com.example.lesson_24;
 
 import java.util.List;
+import java.util.Map;
 
 public interface DepartmentService {
 
-    void initEmployeeList(EmployeeService oldService);
+    void setSalaryAndDepartment(EmployeeService employeeService);
 
-    int getMinimumSalaryInDep(int department);
+    Employee getMinimumSalaryInDep(EmployeeService employeeService, int department);
 
-    int getMaximumSalaryInDep(int department);
+    Employee getMaximumSalaryInDep(EmployeeService employeeService, int department);
 
-    String printEmployeesInDepartment(int department);
+    List<Employee> printEmployeesInDepartment(EmployeeService employeeService, int department);
 
-    String printEmployees();
-
-    List<Employee> getList();
+    Map<Integer, List<Employee>> printEmployees(EmployeeService employeeService);
 
 }

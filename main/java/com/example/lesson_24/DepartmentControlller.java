@@ -2,39 +2,40 @@ package com.example.lesson_24;
 
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.annotation.PostConstruct;
 
 @RestController
 @RequestMapping("/departments")
 public class DepartmentControlller {
 
-    DepartmentServiceImpl service;
-    public DepartmentControlller(DepartmentServiceImpl service, EmployeeService oldService) {
-        this.service = service;
+    private final DepartmentServiceImpl departmentService;
+    private final EmployeeService employeeService;
 
-        service.initEmployeeList(oldService);
+    public DepartmentControlller(DepartmentServiceImpl service, EmployeeService employeeService) {
+        this.departmentService = service;
+        this.employeeService = employeeService;
     }
 
-    @GetMapping()
-    public List<Employee> welcome() {
-        return service.getList();
+    @PostConstruct
+    private void postConstruct() {
+        departmentService.setSalaryAndDepartment(employeeService);
     }
 
     @GetMapping("min-salary")
     public String getMinimumSalaryInDep(@RequestParam int departmentId) {
-        return "Min salary in department " + departmentId + " is " + service.getMinimumSalaryInDep(departmentId) + " руб.";
+        return "Min salary in department " + departmentId + " has " + departmentService.getMinimumSalaryInDep(employeeService, departmentId);
     }
 
     @GetMapping("max-salary")
     public String getMaximumSalaryInDep(@RequestParam int departmentId) {
-        return "Max salary in department " + departmentId + " is " + service.getMaximumSalaryInDep(departmentId) + " руб.";
+        return "Max salary in department " + departmentId + " has " + departmentService.getMaximumSalaryInDep(employeeService, departmentId);
     }
 
     @GetMapping("all")
     public String printEmployeesInDepartment(@RequestParam(required = false) Integer departmentId) {
         if(departmentId == null)
-            return service.printEmployees();
+            return departmentService.printEmployees(employeeService).toString();
 
-        return service.printEmployeesInDepartment(departmentId);
+        return departmentService.printEmployeesInDepartment(employeeService, departmentId).toString();
     }
 }
